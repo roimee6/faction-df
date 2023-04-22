@@ -1,0 +1,24 @@
+[Network]
+  Address = ":19132"
+
+[Players]
+  Folder = "asset/players"
+  MaxCount = 999
+  MaximumChunkRadius = 16
+  SaveData = true
+
+[Resources]
+  AutoBuildPack = true
+  Folder = "asset/resources"
+  Required = true
+
+[Server]
+  AuthEnabled = true
+  JoinMessage = "%v has joined the game"
+  Name = "§oL"
+  QuitMessage = "%v has left the game"
+  ShutdownMessage = "§fRedèmarrage"
+
+[World]
+  Folder = "asset/world"
+  SaveData = true
