@@ -1,7 +1,6 @@
 package faction
 
 import (
-	"fmt"
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
@@ -45,8 +44,6 @@ func (a Accept) Run(source cmd.Source, _ *cmd.Output) {
 
 	faction = strings.ToLower(faction)
 
-	fmt.Println(faction)
-
 	if !handler.ExistFaction(faction) {
 		sender.Message("La faction que vous vouliez rejoindre n'existe plus")
 		return
@@ -59,10 +56,8 @@ func (a Accept) Run(source cmd.Source, _ *cmd.Output) {
 	}
 
 	user.Data.Invites = []string{}
-
-	members := util.Factions[faction].Members
-	members.Members = append(members.Members, sender.Name())
-
 	user.Data.Faction = &faction
+
+	util.Factions[faction].Members.Members = append(util.Factions[faction].Members.Members, sender.Name())
 	sender.Messagef("Vous avez rejoint la faction %s !", faction)
 }

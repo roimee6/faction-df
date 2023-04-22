@@ -7,16 +7,21 @@ import (
 	"github.com/roimee6/Faction/server/util"
 	"io/ioutil"
 	"os"
+	"strconv"
+	"time"
 )
 
 type Data struct {
 	Kill  int
 	Death int
+	Money int
 
 	Coordinates bool
 
 	Faction *string
 	Name    string
+
+	Cooldowns map[string][]string
 
 	Invites []string
 
@@ -31,7 +36,7 @@ type User struct {
 	Data   Data
 }
 
-var users = make(map[string]*User)
+var users = make(map[string]*User, 0)
 
 func CreateUser(p *player.Player) User {
 	if _, ok := users[p.Name()]; ok {
@@ -48,10 +53,10 @@ func CreateUser(p *player.Player) User {
 }
 
 func GetUser(p *player.Player) (*User, error) {
-	if _, ok := users[p.Name()]; !ok {
-		return nil, fmt.Errorf("user %s not found", p.Name())
+	if u, ok := users[p.Name()]; ok {
+		return u, nil
 	}
-	return users[p.Name()], nil
+	return nil, fmt.Errorf("user %s not found", p.Name())
 }
 
 func RemoveUser(p *player.Player) {
@@ -65,6 +70,8 @@ func RemoveUser(p *player.Player) {
 func loadUserData(p *player.Player) Data {
 	file, err := ioutil.ReadFile("asset/data/players/" + p.XUID() + ".json")
 	data := Data{}
+
+	data.Cooldowns = make(map[string][]string, 0)
 
 	data.Name = p.Name()
 	data.Invites = []string{}
@@ -112,4 +119,58 @@ func saveUserData(user *User) {
 	if jsonBytes, err := json.Marshal(user.Data); err == nil {
 		_ = ioutil.WriteFile(filename, jsonBytes, 0644)
 	}
+}
+
+func SetCooldown(player *player.Player, key string, t int64, values []string) {
+	user, err := GetUser(player)
+	if err != nil {
+		return
+	}
+
+	t = time.Now().Add(time.Duration(t) * time.Second).Unix()
+	values = append([]string{strconv.Itoa(int(t))}, values...)
+
+	user.Data.Cooldowns[key] = values
+}
+
+func InCooldown(player *player.Player, key string) bool {
+	user, err := GetUser(player)
+	if err != nil {
+		return false
+	}
+
+	cooldown, ok := user.Data.Cooldowns[key]
+	if !ok {
+		return false
+	}
+
+	cooldownTime, err := strconv.Atoi(cooldown[0])
+	if err != nil {
+		return false
+	}
+
+	return time.Now().Unix() < int64(cooldownTime)
+}
+
+func GetCooldownData(player *player.Player, key string) []string {
+	user, err := GetUser(player)
+	if err != nil {
+		return []string{}
+	}
+
+	cooldown, ok := user.Data.Cooldowns[key]
+	if !ok {
+		return []string{"0", ""}
+	}
+
+	return cooldown
+}
+
+func RemoveCooldown(player *player.Player, key string) {
+	user, err := GetUser(player)
+	if err != nil {
+		return
+	}
+
+	delete(user.Data.Cooldowns, key)
 }

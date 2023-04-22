@@ -1,7 +1,6 @@
 package session
 
 import (
-	"fmt"
 	"github.com/df-mc/dragonfly/server/event"
 	"github.com/df-mc/dragonfly/server/player"
 )
@@ -18,7 +17,6 @@ func NewHandler(p *player.Player) *Handler {
 }
 
 func (h *Handler) HandleChat(_ *event.Context, text *string) {
-	fmt.Println(text)
 }
 
 func (h *Handler) HandleQuit() {

@@ -39,7 +39,7 @@ func (i Invite) Run(source cmd.Source, _ *cmd.Output) {
 	if !handler.HasFaction(sender) {
 		sender.Message("Vous n'avez pas de faction !")
 		return
-	} else if *rank == "officier" {
+	} else if *rank == "member" {
 		sender.Message("Vous n'avez pas la permission d'inviter des joueurs !")
 		return
 	} else if handler.HasFaction(target) {

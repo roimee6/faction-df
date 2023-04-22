@@ -26,5 +26,7 @@ func loadCommands() {
 	cmd.Register(cmd.New("say", "Envoie un message dans le chat", nil, command.Say{}))
 	cmd.Register(cmd.New("sudo", "Execute une commande en tant qu'un autre joueur", nil, command.Sudo{}))
 
-	cmd.Register(cmd.New("faction", "Commande de faction", []string{"f"}, faction.Create{}, faction.Leave{}, faction.Invite{}, faction.Accept{}, faction.Delete{}))
+	cmd.Register(cmd.New("money", "regarde la money", nil, command.Money{}))
+
+	cmd.Register(cmd.New("faction", "Commande de faction", []string{"f"}, faction.Info{}, faction.Accept{}, faction.Create{}, faction.Delete{}, faction.Delhome{}, faction.Deposit{}, faction.Home{}, faction.Invite{}, faction.Leave{}, faction.Sethome{}, faction.Withdraw{}))
 }

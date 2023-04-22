@@ -38,7 +38,7 @@ func (c Create) Run(source cmd.Source, _ *cmd.Output) {
 		return
 	}
 
-	util.Factions[strings.ToLower(name)] = util.Faction{
+	util.Factions[strings.ToLower(name)] = &util.Faction{
 		Name: name,
 		Members: util.FactionMembers{
 			Leader: sender.Name(),

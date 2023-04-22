@@ -5,6 +5,8 @@ type Faction struct {
 	Home        *string
 	Description *string
 
+	Money int
+
 	Members FactionMembers
 
 	Claims []string

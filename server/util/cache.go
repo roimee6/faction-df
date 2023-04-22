@@ -2,12 +2,11 @@ package util
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 )
 
 var (
-	Factions = make(map[string]Faction)
+	Factions = make(map[string]*Faction)
 )
 
 func LoadCache() {
@@ -33,7 +32,6 @@ func loadFactions() {
 
 	data, err := os.ReadFile("asset/factions.json")
 	if err != nil {
-		fmt.Println("error reading factions.json: " + err.Error())
 		panic(err)
 	}
 
@@ -45,6 +43,6 @@ func loadFactions() {
 	}
 
 	for index, element := range factions {
-		Factions[index] = element
+		Factions[index] = &element
 	}
 }

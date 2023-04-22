@@ -34,14 +34,13 @@ func (l Leave) Run(source cmd.Source, _ *cmd.Output) {
 	}
 
 	faction := user.Data.Faction
-	fac := util.Factions[*faction]
 
 	switch *rank {
 	case "officer":
-		fac.Members.Officers = util.RemoveElementFromArray(fac.Members.Officers, sender.Name())
+		util.Factions[*faction].Members.Officers = util.RemoveElementFromArray(util.Factions[*faction].Members.Officers, sender.Name())
 		break
 	case "member":
-		fac.Members.Members = util.RemoveElementFromArray(fac.Members.Members, sender.Name())
+		util.Factions[*faction].Members.Members = util.RemoveElementFromArray(util.Factions[*faction].Members.Members, sender.Name())
 		break
 	}
 
