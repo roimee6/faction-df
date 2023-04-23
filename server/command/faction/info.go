@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
 )
 
 type Info struct {
@@ -31,5 +30,5 @@ func (i Info) Run(source cmd.Source, _ *cmd.Output) {
 	faction := user.Data.Faction
 
 	sender.Message("Faction: " + *faction)
-	sender.Messagef("%d", util.Factions[*faction])
+	sender.Messagef("%d", handler.Factions[*faction])
 }

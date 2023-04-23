@@ -38,13 +38,18 @@ func (c Create) Run(source cmd.Source, _ *cmd.Output) {
 		return
 	}
 
-	util.Factions[strings.ToLower(name)] = &util.Faction{
+	handler.Factions[strings.ToLower(name)] = &util.Faction{
 		Name: name,
 		Members: util.FactionMembers{
-			Leader: sender.Name(),
+			Leader:   sender.Name(),
+			Officers: []string{},
+			Members:  []string{},
 		},
+		Claims: []string{},
 	}
 
 	user.Data.Faction = &name
 	sender.Message("Vous venez de créer la faction " + name)
+
+	handler.UpdateNameTag(sender)
 }

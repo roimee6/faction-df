@@ -1,11 +1,11 @@
 package util
 
 type Faction struct {
-	Name        string
-	Home        *string
-	Description *string
+	Name string
+	Home *string
 
 	Money int
+	Power int
 
 	Members FactionMembers
 

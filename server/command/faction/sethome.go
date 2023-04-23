@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
 	"strconv"
 )
 
@@ -38,7 +37,6 @@ func (s Sethome) Run(source cmd.Source, _ *cmd.Output) {
 	pos := sender.Position()
 	posStr := strconv.Itoa(int(pos.X())) + ":" + strconv.Itoa(int(pos.Y())) + ":" + strconv.Itoa(int(pos.Z()))
 
-	util.Factions[*faction].Home = &posStr
-
+	handler.Factions[*faction].Home = &posStr
 	sender.Message("Vous venez de définir votre base !")
 }

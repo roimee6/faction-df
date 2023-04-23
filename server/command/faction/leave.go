@@ -37,13 +37,15 @@ func (l Leave) Run(source cmd.Source, _ *cmd.Output) {
 
 	switch *rank {
 	case "officer":
-		util.Factions[*faction].Members.Officers = util.RemoveElementFromArray(util.Factions[*faction].Members.Officers, sender.Name())
+		handler.Factions[*faction].Members.Officers = util.RemoveElementFromArray(handler.Factions[*faction].Members.Officers, sender.Name())
 		break
 	case "member":
-		util.Factions[*faction].Members.Members = util.RemoveElementFromArray(util.Factions[*faction].Members.Members, sender.Name())
+		handler.Factions[*faction].Members.Members = util.RemoveElementFromArray(handler.Factions[*faction].Members.Members, sender.Name())
 		break
 	}
 
 	user.Data.Faction = nil
 	sender.Message("Vous venez de quitter votre faction !")
+
+	handler.UpdateNameTag(sender)
 }

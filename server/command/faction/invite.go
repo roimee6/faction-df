@@ -8,8 +8,8 @@ import (
 )
 
 type Invite struct {
-	Sub    cmd.SubCommand `cmd:"invite"`
-	Player []cmd.Target   `cmd:"player"`
+	Sub     cmd.SubCommand `cmd:"invite"`
+	Targets []cmd.Target   `cmd:"joueur"`
 }
 
 func (i Invite) Run(source cmd.Source, _ *cmd.Output) {
@@ -18,12 +18,12 @@ func (i Invite) Run(source cmd.Source, _ *cmd.Output) {
 		return
 	}
 
-	if len(i.Player) < 1 {
+	if len(i.Targets) < 1 {
 		sender.Message("Vous devez spécifier un joueur !")
 		return
 	}
 
-	target, ok := i.Player[0].(*player.Player)
+	target, ok := i.Targets[0].(*player.Player)
 	if !ok {
 		return
 	}

@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
 )
 
 type Delete struct {
@@ -33,7 +32,6 @@ func (d Delete) Run(source cmd.Source, _ *cmd.Output) {
 		return
 	}
 
-	delete(util.Factions, *user.Data.Faction)
 	handler.BroadcastFactionMessage(*user.Data.Faction, "La faction dont vous êtiez n'existe désormais plus")
 
 	for _, member := range handler.GetOnlineFactionMembers(*user.Data.Faction) {
@@ -43,5 +41,9 @@ func (d Delete) Run(source cmd.Source, _ *cmd.Output) {
 		}
 
 		memberUser.Data.Faction = nil
+		handler.UpdateNameTag(member)
 	}
+
+	// TODO FIX ICI
+	delete(handler.Factions, *user.Data.Faction)
 }

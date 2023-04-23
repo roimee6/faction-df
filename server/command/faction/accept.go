@@ -58,6 +58,8 @@ func (a Accept) Run(source cmd.Source, _ *cmd.Output) {
 	user.Data.Invites = []string{}
 	user.Data.Faction = &faction
 
-	util.Factions[faction].Members.Members = append(util.Factions[faction].Members.Members, sender.Name())
+	handler.Factions[faction].Members.Members = append(handler.Factions[faction].Members.Members, sender.Name())
 	sender.Messagef("Vous avez rejoint la faction %s !", faction)
+
+	handler.UpdateNameTag(sender)
 }

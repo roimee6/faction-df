@@ -5,26 +5,30 @@ import (
 	"fmt"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/util"
-	"io/ioutil"
 	"os"
-	"strconv"
-	"time"
 )
 
 type Data struct {
-	Kill  int
-	Death int
-	Money int
+	Kill       int
+	Death      int
+	Money      int
+	Killstreak int
 
-	Coordinates bool
+	Coordinates  bool
+	FactionChat  bool
+	StaffChat    bool
+	PlayerBefore bool
+	Scoreboard   bool
 
 	Faction *string
-	Name    string
+
+	Rank        string
+	Name        string
+	DisplayName string
 
 	Cooldowns map[string][]string
 
-	Invites []string
-
+	Invites       []string
 	Addresses     []string
 	UUIDs         []string
 	SelfSignedIDs []string
@@ -61,17 +65,26 @@ func GetUser(p *player.Player) (*User, error) {
 
 func RemoveUser(p *player.Player) {
 	if user, err := GetUser(p); err == nil {
-		saveUserData(user)
+		SaveData(p.XUID(), user.Data)
 	}
 
 	delete(users, p.Name())
 }
 
 func loadUserData(p *player.Player) Data {
-	file, err := ioutil.ReadFile("asset/data/players/" + p.XUID() + ".json")
-	data := Data{}
+	data := ParseData(p.XUID())
 
-	data.Cooldowns = make(map[string][]string, 0)
+	fmt.Println(data)
+
+	if data.Rank == "" {
+		data.Rank = "joueur"
+		data.Money = 1000
+		data.DisplayName = p.Name()
+		data.FactionChat = false
+		data.StaffChat = false
+		data.PlayerBefore = false
+		data.Scoreboard = true
+	}
 
 	data.Name = p.Name()
 	data.Invites = []string{}
@@ -89,18 +102,14 @@ func loadUserData(p *player.Player) Data {
 		data.DeviceIDs = append(data.DeviceIDs, p.DeviceID())
 	}
 
-	if err != nil {
-		_ = json.Unmarshal(file, &data)
-	}
-
 	if data.Coordinates {
 		p.ShowCoordinates()
 	}
 	return data
 }
 
-func saveUserData(user *User) {
-	filename := "asset/data/players/" + user.Player.XUID() + ".json"
+func SaveData(xuid string, data Data) {
+	filename := "asset/data/players/" + xuid + ".json"
 
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		file, _ := os.Create(filename)
@@ -116,61 +125,19 @@ func saveUserData(user *User) {
 		_ = file.Close()
 	}(file)
 
-	if jsonBytes, err := json.Marshal(user.Data); err == nil {
-		_ = ioutil.WriteFile(filename, jsonBytes, 0644)
+	if jsonBytes, err := json.Marshal(data); err == nil {
+		_ = os.WriteFile(filename, jsonBytes, 0644)
 	}
 }
 
-func SetCooldown(player *player.Player, key string, t int64, values []string) {
-	user, err := GetUser(player)
-	if err != nil {
-		return
+func ParseData(xuid string) Data {
+	file, err := os.ReadFile("asset/data/players/" + xuid + ".json")
+	data := Data{}
+
+	data.Cooldowns = make(map[string][]string, 0)
+
+	if err == nil {
+		_ = json.Unmarshal(file, &data)
 	}
-
-	t = time.Now().Add(time.Duration(t) * time.Second).Unix()
-	values = append([]string{strconv.Itoa(int(t))}, values...)
-
-	user.Data.Cooldowns[key] = values
-}
-
-func InCooldown(player *player.Player, key string) bool {
-	user, err := GetUser(player)
-	if err != nil {
-		return false
-	}
-
-	cooldown, ok := user.Data.Cooldowns[key]
-	if !ok {
-		return false
-	}
-
-	cooldownTime, err := strconv.Atoi(cooldown[0])
-	if err != nil {
-		return false
-	}
-
-	return time.Now().Unix() < int64(cooldownTime)
-}
-
-func GetCooldownData(player *player.Player, key string) []string {
-	user, err := GetUser(player)
-	if err != nil {
-		return []string{}
-	}
-
-	cooldown, ok := user.Data.Cooldowns[key]
-	if !ok {
-		return []string{"0", ""}
-	}
-
-	return cooldown
-}
-
-func RemoveCooldown(player *player.Player, key string) {
-	user, err := GetUser(player)
-	if err != nil {
-		return
-	}
-
-	delete(user.Data.Cooldowns, key)
+	return data
 }

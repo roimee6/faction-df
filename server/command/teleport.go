@@ -5,6 +5,7 @@ import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/go-gl/mathgl/mgl64"
+	"github.com/roimee6/Faction/server/handler"
 )
 
 type TeleportXYZ struct {
@@ -64,4 +65,12 @@ func (TeleportPlayer) TeleportPlayerToAnotherPlayer(to, p *player.Player) {
 
 	p.Message(fmt.Sprintf("%s has been teleported to your side.", to.Name()))
 	to.Message(fmt.Sprintf("You have been teleported here by %s.", p.Name()))
+}
+
+func (TeleportPlayer) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
+}
+
+func (TeleportXYZ) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }

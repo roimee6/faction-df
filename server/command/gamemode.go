@@ -4,6 +4,7 @@ import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/df-mc/dragonfly/server/world"
+	"github.com/roimee6/Faction/server/handler"
 	"strings"
 )
 
@@ -105,4 +106,12 @@ func (gameMode) Options(cmd.Source) []string {
 		"adventure", "a",
 		"spectator", "sp",
 	}
+}
+
+func (GameModeString) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
+}
+
+func (GameModeInt) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }

@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
 	"math"
 	"strconv"
 )
@@ -42,7 +41,7 @@ func (d Deposit) Run(source cmd.Source, _ *cmd.Output) {
 		return
 	}
 
-	util.Factions[*faction].Money += amount
+	handler.Factions[*faction].Money += amount
 	user.Data.Money -= amount
 
 	sender.Messagef("Vous venez de donner %s à la faction !", strconv.Itoa(amount))

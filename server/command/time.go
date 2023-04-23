@@ -3,6 +3,7 @@ package command
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
+	"github.com/roimee6/Faction/server/handler"
 )
 
 type SetTimeInt struct {
@@ -66,4 +67,12 @@ func (spec) Type() string {
 
 func (spec) Options(_ cmd.Source) []string {
 	return []string{"day", "night", "noon", "midnight", "sunrise", "sunset"}
+}
+
+func (SetTimeInt) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
+}
+
+func (SetTimeString) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }

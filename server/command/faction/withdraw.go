@@ -5,7 +5,6 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
 	"math"
 	"strconv"
 )
@@ -37,12 +36,12 @@ func (w Withdraw) Run(source cmd.Source, _ *cmd.Output) {
 	if 0 >= amount {
 		sender.Message("Vous ne pouvez pas retirer une somme négative ou nulle !")
 		return
-	} else if amount >= util.Factions[*faction].Money {
+	} else if amount >= handler.Factions[*faction].Money {
 		sender.Message("Vous n'avez pas assez d'argent !")
 		return
 	}
 
-	util.Factions[*faction].Money -= amount
+	handler.Factions[*faction].Money -= amount
 	user.Data.Money += amount
 
 	sender.Messagef("Vous venez de retirer %s de la faction !", strconv.Itoa(amount))

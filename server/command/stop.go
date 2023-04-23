@@ -2,6 +2,7 @@ package command
 
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
+	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/util"
 )
 
@@ -17,4 +18,8 @@ func (t Stop) Run(_ cmd.Source, output *cmd.Output) {
 	}
 
 	panic("stop")
+}
+
+func (Stop) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }

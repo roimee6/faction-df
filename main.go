@@ -7,7 +7,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player/chat"
 	"github.com/pelletier/go-toml"
 	nitro "github.com/roimee6/Faction/server"
-	_player "github.com/roimee6/Faction/server/session"
+	"github.com/roimee6/Faction/server/handler"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -25,18 +25,22 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	srv := conf.New()
-	srv.CloseOnProgramEnd()
+	defer func() {
+		handler.SaveCache()
+	}()
 
+	srv := conf.New()
+
+	srv.CloseOnProgramEnd()
 	srv.Listen()
 
 	nitro.New(srv)
 
 	for srv.Accept(func(p *player.Player) {
-		h := _player.NewHandler(p)
+		h := nitro.NewHandler(p)
 		p.Handle(h)
 
-		_player.CreateUser(p)
+		nitro.HandleJoin(p)
 	}) {
 	}
 }
@@ -66,6 +70,9 @@ func readConfig(log server.Logger) (server.Config, error) {
 	if err := toml.Unmarshal(data, &c); err != nil {
 		return zero, fmt.Errorf("decode config: %v", err)
 	}
+
+	c.Server.JoinMessage = ""
+	c.Server.QuitMessage = ""
 
 	return c.Config(log)
 }

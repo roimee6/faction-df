@@ -3,6 +3,7 @@ package command
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player"
+	"github.com/roimee6/Faction/server/handler"
 	"strings"
 	"time"
 )
@@ -47,4 +48,8 @@ func (w weatherType) Options(_ cmd.Source) []string {
 	return []string{
 		"clear", "rain", "thunder",
 	}
+}
+
+func (Weather) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }

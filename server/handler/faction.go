@@ -8,7 +8,7 @@ import (
 )
 
 func ExistFaction(name string) bool {
-	_, ok := util.Factions[strings.ToLower(name)]
+	_, ok := Factions[strings.ToLower(name)]
 	if ok {
 		return true
 	} else {
@@ -19,7 +19,7 @@ func ExistFaction(name string) bool {
 func GetFactionMembers(key string) []string {
 	var arr []string
 
-	faction := util.Factions[key]
+	faction := Factions[key]
 
 	list := faction.Members
 	leader := list.Leader
@@ -89,13 +89,13 @@ func BroadcastFactionMessage(faction string, message string) {
 }
 
 func GetFactionRank(faction string, player string) *string {
-	members := util.Factions[strings.ToLower(faction)].Members
+	members := Factions[strings.ToLower(faction)].Members
 
 	if members.Leader == player {
 		rank := "leader"
 		return &rank
 	} else if util.InArray(player, members.Officers) {
-		rank := "officier"
+		rank := "officer"
 		return &rank
 	} else if util.InArray(player, members.Members) {
 		rank := "member"

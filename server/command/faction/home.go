@@ -7,7 +7,7 @@ import (
 	"github.com/go-gl/mathgl/mgl64"
 	"github.com/roimee6/Faction/server/handler"
 	"github.com/roimee6/Faction/server/session"
-	"github.com/roimee6/Faction/server/util"
+	"github.com/roimee6/Faction/server/util/ticker"
 	"strconv"
 	"strings"
 	"time"
@@ -31,16 +31,16 @@ func (h Home) Run(source cmd.Source, _ *cmd.Output) {
 	if !handler.HasFaction(sender) {
 		sender.Message("Vous n'avez pas de faction !")
 		return
-	} else if session.InCooldown(sender, "combat") {
+	} else if handler.InCooldown(sender, "combat") {
 		sender.Message("Vous ne pouvez pas faire ça en combat !")
 		return
-	} else if session.InCooldown(sender, "teleportation") {
+	} else if handler.InCooldown(sender, "teleportation") {
 		sender.Message("Vous ne pouvez pas faire ça si vous êtes en téléportation !")
 		return
 	}
 
 	faction := user.Data.Faction
-	fac := util.Factions[*faction]
+	fac := handler.Factions[*faction]
 
 	if fac.Home == nil {
 		sender.Message("Votre faction n'a pas de base !")
@@ -62,8 +62,8 @@ func (h Home) Run(source cmd.Source, _ *cmd.Output) {
 		sender.AddEffect(effect.New(effect.Blindness{}, 1, time.Duration(t+1)*time.Second).WithoutParticles())
 	}
 
-	session.SetCooldown(sender, "teleportation", int64(t), []string{handler.GetPlace(sender)})
-	handler.CreateTeleportatationTicker(sender, pos)
+	handler.SetCooldown(sender, "teleportation", int64(t), []string{handler.GetPlace(sender)})
+	ticker.Teleportation(sender, pos)
 
 	sender.Message("Vous allez être téléporté à la base !")
 }

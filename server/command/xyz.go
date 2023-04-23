@@ -10,13 +10,11 @@ type Xyz struct{}
 
 func (c Xyz) Run(source cmd.Source, _ *cmd.Output) {
 	sender, ok := source.(*player.Player)
-
 	if !ok {
 		return
 	}
 
 	user, err := session.GetUser(sender)
-
 	if err != nil {
 		return
 	}
@@ -24,10 +22,10 @@ func (c Xyz) Run(source cmd.Source, _ *cmd.Output) {
 	if user.Data.Coordinates {
 		sender.HideCoordinates()
 		sender.Message("Vous venez de désactiver les coordonnées !")
-		user.Data.Coordinates = false
 	} else {
 		sender.ShowCoordinates()
 		sender.Message("Vous venez d'activer les coordonnées !")
-		user.Data.Coordinates = true
 	}
+
+	user.Data.Coordinates = !user.Data.Coordinates
 }

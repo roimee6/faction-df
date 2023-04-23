@@ -3,6 +3,7 @@ package command
 import (
 	"github.com/df-mc/dragonfly/server/cmd"
 	"github.com/df-mc/dragonfly/server/player/chat"
+	"github.com/roimee6/Faction/server/handler"
 	"strings"
 )
 
@@ -22,4 +23,8 @@ func (s Say) Run(_ cmd.Source, _ *cmd.Output) {
 	if err != nil {
 		return
 	}
+}
+
+func (Say) Allow(source cmd.Source) bool {
+	return handler.HasRankPermission(source, "fondateur")
 }
