@@ -44,11 +44,14 @@ type User struct {
 	Data   Data
 }
 
+var usersMu sync.Mutex
 var users = make(map[string]*User, 0)
 
 func CreateUser(p *player.Player) User {
-	if _, ok := users[p.Name()]; ok {
-		return *users[p.Name()]
+	usersMu.Lock()
+	defer usersMu.Unlock()
+	if u, ok := users[p.Name()]; ok {
+		return *u
 	}
 
 	u := User{
@@ -61,6 +64,8 @@ func CreateUser(p *player.Player) User {
 }
 
 func GetUser(p *player.Player) (*User, error) {
+	usersMu.Lock()
+	defer usersMu.Unlock()
 	if u, ok := users[p.Name()]; ok {
 		return u, nil
 	}
@@ -71,8 +76,9 @@ func RemoveUser(p *player.Player) {
 	if user, err := GetUser(p); err == nil {
 		SaveData(p.XUID(), user.Data)
 	}
-
+	usersMu.Lock()
 	delete(users, p.Name())
+	usersMu.Unlock()
 }
 
 func loadUserData(p *player.Player) Data {
