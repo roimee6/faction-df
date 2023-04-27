@@ -6,6 +6,7 @@ import (
 	"github.com/df-mc/dragonfly/server/player"
 	"github.com/roimee6/Faction/server/util"
 	"os"
+	"sync"
 )
 
 type Data struct {
@@ -20,14 +21,17 @@ type Data struct {
 	PlayerBefore bool
 	Scoreboard   bool
 
-	Faction *string
+	Faction   *string
+	LastReply *string
 
 	Rank        string
 	Name        string
 	DisplayName string
 
-	Cooldowns map[string][]string
+	CooldownsMu sync.Mutex
+	Cooldowns   map[string][]string
 
+	SlicesMu      sync.Mutex
 	Invites       []string
 	Addresses     []string
 	UUIDs         []string
@@ -87,6 +91,7 @@ func loadUserData(p *player.Player) Data {
 	}
 
 	data.Name = p.Name()
+
 	data.Invites = []string{}
 
 	if !util.InArray(p.Addr().String(), data.Addresses) {

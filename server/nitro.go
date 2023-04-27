@@ -32,9 +32,16 @@ func loadCommands() {
 	cmd.Register(cmd.New("sudo", "Execute une commande en tant qu'un autre joueur", nil, command.Sudo{}))
 
 	cmd.Register(cmd.New("money", "regarde la money", nil, command.Money{}))
+	cmd.Register(cmd.New("pay", "Paye un joueur", nil, command.Pay{}))
+
 	cmd.Register(cmd.New("setrank", "Change le grade d'un joueur", nil, command.SetRankByTarget{}, command.SetRankByString{}))
 	cmd.Register(cmd.New("staffchat", "Envoie un message dans le staffchat", nil, command.StaffChat{}))
 	cmd.Register(cmd.New("bienvenue", "Souhaite la bienvenue à un joueur", []string{"bvn"}, command.Bienvenue{}))
+
+	cmd.Register(cmd.New("reply", "Répond au dernier message privé", []string{"r"}, command.Reply{}))
+	cmd.Register(cmd.New("message", "Envoie un message privé", []string{"msg", "mp", "w", "tell"}, command.Message{}))
+	cmd.Register(cmd.New("spawn", "Téléporte à la base", nil, command.Spawn{}))
+	cmd.Register(cmd.New("ping", "Regarde le ping", nil, command.Ping{}))
 
 	cmd.Register(cmd.New("faction", "Commande de faction", []string{"f"}, faction.Accept{}, faction.Create{}, faction.Delete{}, faction.Delhome{}, faction.Deposit{}, faction.Home{}, faction.Info{}, faction.Invite{}, faction.Leave{}, faction.Rename{}, faction.Sethome{}, faction.Top{}, faction.Withdraw{}, faction.PromoteByString{}, faction.PromoteByTarget{}, faction.LeaderByTarget{}, faction.LeaderByString{}, faction.KickByTarget{}, faction.KickByString{}, faction.DemoteByTarget{}, faction.DemoteByString{}, faction.Chat{}))
 }
